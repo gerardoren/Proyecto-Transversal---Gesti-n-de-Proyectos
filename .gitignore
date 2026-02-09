@@ -1,1 +1,13 @@
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Resultados pesados
+outputs/*.csv
+outputs/*.rds
+outputs/*.png
 
