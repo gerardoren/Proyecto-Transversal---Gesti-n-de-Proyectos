@@ -58,7 +58,18 @@ El flujo de trabajo se compone de las siguientes etapas:
 
 ## Datos
 
-Los datos de calibración provienen de Fedorova et al. (2022), basados en el análisis de 300,000 mudanzas residenciales en los Países Bajos entre 1850 y 1950. El archivo `data/beta_df.RDS` contiene un vector de 93 tasas de migración específicas por edad utilizadas para parametrizar el modelo de simulación con datos empíricos reales.
+### `data/beta_df.RDS`
+
+Archivo serializado de R que contiene los datos empíricos de calibración del modelo de simulación.
+
+| Campo | Descripción |
+|---|---|
+| **Formato** | Objeto R serializado (`.RDS`) |
+| **Contenido** | `beta_mod_f` — vector de 93 tasas de migración específicas por edad |
+| **Fuente** | Fedorova et al. (2022) — análisis de 300,000 mudanzas residenciales en los Países Bajos (1850–1950) |
+| **Uso** | Calibra las tasas de migración dependientes de la edad en el modelo basado en agentes |
+
+Este archivo es un insumo original del repositorio de Deffner et al. (2024) y es necesario para ejecutar el script principal `longitudinal_transmission_analysis.R`.
 
 ## Ejecución
 
