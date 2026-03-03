@@ -1,38 +1,84 @@
-# Proyecto-Transversal---Gestion-de-Proyectos
-Paper seleccionado: 
+# Proyecto Transversal - Gestión de Proyectos
 
-Deffner, D., Fedorova, N., Andrews, J., & McElreath, R. (2024). Bridging theory and data: A computational workflow for cultural evolution. Proceedings of the National Academy of Sciences.
+Reproducción parcial de resultados cuantitativos del artículo:
 
-Integrantes del equipo y roles:
+> Deffner, D., Fedorova, N., Andrews, J., & McElreath, R. (2024). *Bridging theory and data: A computational workflow for cultural evolution*. Proceedings of the National Academy of Sciences.
 
-Andrés Gerardo Rendón: Coordinación general del proyecto y gestión del repositorio
+## Descripción
 
-Juan Eduardo Gutierrez: Revisión teórica y definición del resultado a reproducir
+Este proyecto reproduce la relación entre **migración**, **conformidad** y **diversidad cultural** a partir de los modelos generativos presentados por Deffner et al. (2024). Se implementa un flujo computacional completo que incluye simulación basada en agentes, inferencia bayesiana y análisis contrafáctico causal.
 
-Esteban Gonzalez Trujillo: Análisis de datos y revisión del código original
+El enfoque se centra en replicar la **Figura 4** del manuscrito original, que demuestra cómo cambios en tasas de migración afectan la diversidad cultural entre grupos poblacionales.
 
-Santiago Arias: Documentación y control de versiones
+## Integrantes y roles
 
+| Integrante | Rol |
+|---|---|
+| **Andrés Gerardo Rendón** | Coordinación general del proyecto y gestión del repositorio |
+| **Juan Eduardo Gutierrez** | Revisión teórica y definición del resultado a reproducir |
+| **Esteban González Trujillo** | Análisis de datos y revisión del código original |
+| **Santiago Arias** | Documentación y control de versiones |
 
-Descripción general del proyecto:
+## Estructura del repositorio
 
-Este proyecto tiene como objetivo reproducir parcialmente uno de los resultados cuantitativos presentados en Deffner et al. (2024), un artículo que propone un flujo computacional basado en modelos generativos para conectar teoría y evidencia empírica en estudios de evolución cultural.
+```
+├── README.md                  # Este archivo
+├── .gitignore                 # Archivos excluidos del control de versiones
+├── code/
+│   ├── README.md              # Documentación detallada de los scripts
+│   ├── longitudinal_transmission_analysis.R   # Script principal de análisis
+│   └── Longitudinal_Conf.stan                 # Modelo bayesiano en Stan
+├── data/
+│   ├── README.md              # Documentación de los datos
+│   └── beta_df.RDS            # Tasas de migración por edad (Países Bajos, 1850-1950)
+├── docs/
+│   └── README.md              # Plan de análisis y decisiones metodológicas
+└── outputs/
+    └── README.md              # Resultados generados (figuras, tablas, intermedios)
+```
 
-El objetivo principal del Proyecto Transversal busca replicar un resultado específico respaldado por evidencia cuantitativa, manteniendo las buenas prácticas de ciencia abierta, reproducibilidad y documentación.
+## Metodología
 
-En particular, este proyecto se enfoca en reproducir la relación entre migración, conformidad y diversidad cultural a partir de los modelos generativos presentados por los autores, utilizando el código y los insumos disponibles públicamente en el repositorio oficial del artículo.
+El flujo de trabajo se compone de las siguientes etapas:
 
+1. **Simulación basada en agentes (ABM):** 3,000 agentes organizados en 30 grupos en una cuadrícula espacial de 50x50, con dinámicas de nacimiento-muerte, migración dependiente de la edad e innovación cultural.
+2. **Transmisión cultural:** Aprendizaje social con sesgo de conformidad (ley de potencia) y tasa de innovación del 10%, utilizando 30 modelos de rol por aprendiz.
+3. **Inferencia bayesiana:** Ajuste de un modelo jerárquico de Atracción Ponderada por Experiencia (EWA) mediante Stan, con 4 cadenas MCMC de 3,000 iteraciones cada una.
+4. **Análisis contrafáctico:** Evaluación del efecto causal de cambios en migración (+5% y -5%) sobre la diversidad cultural (Fst), usando 300 muestras posteriores con 100 simulaciones cada una.
 
-Explicación de la estructura de directorios:
+## Tecnologías y dependencias
 
-El repositorio se organiza en una estructura de carpetas diseñada para facilitar la reproducibilidad, la trazabilidad del análisis y el trabajo colaborativo. La carpeta data está destinada a contener los datos y/o insumos derivados de los materiales públicos asociados al artículo original, incluyendo datos simulados o procesados necesarios para reproducir el resultado seleccionado. La carpeta code albergará los scripts utilizados para implementar los modelos generativos, simulaciones y procedimientos de inferencia descritos en el artículo, manteniendo separada la lógica computacional de los datos y resultados.
+- **R** - Lenguaje principal para simulación y análisis estadístico
+- **Stan** - Lenguaje de programación probabilística para inferencia bayesiana
+- **Paquetes de R requeridos:**
+  - `scales` - Funciones de transparencia de colores
+  - `RColorBrewer` - Paletas de colores para visualización
+  - `rethinking` - Interfaz simplificada para modelado bayesiano con Stan
+  - `cmdstanr` / `rstan` - Motor de inferencia bayesiana
 
-La carpeta outputs se utilizará para almacenar los productos del análisis, tales como figuras, tablas y resultados intermedios generados durante la reproducción. Por su parte, la carpeta docs contiene documentación complementaria del proyecto, incluyendo el plan de análisis, decisiones metodológicas y notas sobre posibles desviaciones respecto al artículo original. Cada directorio incluye un archivo README.md interno que documenta su propósito y contenido esperado, y el archivo .gitignore permite controlar los archivos que no deben versionarse, manteniendo un repositorio limpio y enfocado en la reproducibilidad.
+## Datos
 
+Los datos de calibración provienen de Fedorova et al. (2022), basados en el análisis de 300,000 mudanzas residenciales en los Países Bajos entre 1850 y 1950. El archivo `data/beta_df.RDS` contiene un vector de 93 tasas de migración específicas por edad utilizadas para parametrizar el modelo de simulación con datos empíricos reales.
 
-Requisitos iniciales identificados:
+## Ejecución
 
-Para la reproducción del resultado seleccionado del artículo de Deffner et al. (2024), se identifican como requisitos iniciales el acceso al repositorio público de los autores, que contiene el código y los scripts anotados utilizados en el flujo computacional propuesto.Por otro lado, el proyecto requerirá el uso de lenguajes de programación orientados a simulación y análisis estadístico (principalmente R y/o Python), así como librerías asociadas a modelos generativos, simulaciones basadas en agentes e inferencia bayesiana.
+```r
+# Desde la carpeta code/
+source("longitudinal_transmission_analysis.R")
+```
 
-Adicionalmente, se requiere un entorno de trabajo que permita la ejecución de simulaciones estocásticas y la generación de resultados reproducibles, junto con el uso de GitHub para el control de versiones y la colaboración entre los integrantes del equipo. En esta primera etapa, estos requisitos se identifican de manera preliminar y podrán ajustarse o detallarse con mayor precisión a medida que avance la implementación del proyecto y se profundice en el análisis del código original.
+**Tiempos estimados de ejecución:**
+- Simulaciones iniciales: ~30 minutos
+- Ajuste con Stan: 1-2 horas (4 cadenas, 3,000 iteraciones)
+- Simulaciones contrafácticas: ~30 minutos
 
+> **Nota:** Se recomienda un entorno con al menos 8 GB de RAM y múltiples núcleos para las simulaciones paralelas.
+
+## Referencias
+
+- Deffner, D., Fedorova, N., Andrews, J., & McElreath, R. (2024). Bridging theory and data: A computational workflow for cultural evolution. *Proceedings of the National Academy of Sciences*.
+- Fedorova, N. et al. (2022). The complex life course of mobility: Quantitative description of 300,000 residential moves in 1850-1950 Netherlands.
+
+## Licencia y atribución
+
+Todos los datos y código base se derivan de los materiales públicos del repositorio oficial de Deffner et al. (2024). Se respetan las licencias y atribuciones de los autores originales.
