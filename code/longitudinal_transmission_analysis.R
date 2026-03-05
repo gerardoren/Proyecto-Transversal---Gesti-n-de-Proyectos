@@ -12,7 +12,9 @@ library(scales)
 library(RColorBrewer)
 
 #Load real age trajectory for migration (based on Fedorova et al., 2022, The complex life course of mobility: Quantitative description of 300,000 residential moves in 1850-1950 Netherlands) ) 
-age_mig_NL <- readRDS("beta_df.RDS")$beta_mod_f
+# Los datos se cargan directamente desde el repositorio Zenodo (DOI: 10.5281/zenodo.18879419)
+# para garantizar reproducibilidad sin necesidad de tener el archivo localmente.
+age_mig_NL <- readRDS(url("https://zenodo.org/records/18879419/files/beta_df.RDS?download=1"))$beta_mod_f
 max_age <- length(age_mig_NL)
 
 #Define exponential function for age-dependent probabilities
