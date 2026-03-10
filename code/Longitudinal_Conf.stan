@@ -26,16 +26,16 @@ data{
    int N;              //Number of observations 
    int N_id;           //Number of individuals
    int N_groups;       //Number of groups
-   int N_partners;    //Number of interaction partners
-   int N_alt[N];       //Number of available traits for each choice
-   int id[N];          //Unique individual identification
-   int group[N];       //Group ID
-   int age[N];         //Age
-   int Max_age;       //maximum age
-   int choices[N];     //Chosen trait
-   int innovate[N];    //Does individual have a new variant?
-   int migrate[N];    //Did individual migrate since the last timestep?
-   real frequencies[N, N_partners+1]; //Matrix for all interaction partners
+   int N_partners;     //Number of interaction partners
+   array[N] int N_alt;       //Number of available traits for each choice
+   array[N] int id;          //Unique individual identification
+   array[N] int group;       //Group ID
+   array[N] int age;         //Age
+   int Max_age;              //maximum age
+   array[N] int choices;     //Chosen trait
+   array[N] int innovate;    //Does individual have a new variant?
+   array[N] int migrate;     //Did individual migrate since the last timestep?
+   array[N, N_partners + 1] real frequencies; //Matrix for all interaction partners
 }
 
 //Parameter block: Define and name the size of each unobserved variable.
