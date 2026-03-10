@@ -93,3 +93,12 @@ source("longitudinal_transmission_analysis.R")
 ## Licencia y atribución
 
 Todos los datos y código base se derivan de los materiales públicos del repositorio oficial de Deffner et al. (2024). Se respetan las licencias y atribuciones de los autores originales.
+
+
+## Estado actual de la reproducción
+
+Se ha identificado y clonado el código relevante del artículo original, 
+incluyendo el modelo bayesiano en Stan (Longitudinal_Conf.stan) y el script 
+principal de análisis. Se realizaron pruebas preliminares de compilación del 
+modelo. Se trabaja actualmente en la ejecución completa del muestreo MCMC 
+y la generación de la Figura 4B.
