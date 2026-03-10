@@ -40,7 +40,7 @@ data{
 
 //Parameter block: Define and name the size of each unobserved variable.
 parameters{
-  #Innovation rate, average migration rate and conformity on the latent (logit/log) scale
+  //Innovation rate, average migration rate and conformity on the latent (logit/log) scale
    real logit_mu;
    real logit_m;
    real log_theta;
