@@ -1,13 +1,41 @@
+# ========================
 # Archivos del sistema
+# ========================
 .DS_Store
 Thumbs.db
+desktop.ini
 
+# ========================
 # Archivos temporales
+# ========================
 *.log
 *.tmp
+*~
 
+# ========================
+# R / RStudio
+# ========================
+.Rhistory
+.Rdata
+.RData
+.Ruserdata
+.Rproj.user/
+*.Rproj
+
+# ========================
+# Stan (archivos compilados)
+# ========================
+*.exe
+*.o
+*.hpp
+*.so
+*.dll
+
+# ========================
 # Resultados pesados
+# ========================
 outputs/*.csv
 outputs/*.rds
+outputs/*.RDS
 outputs/*.png
-
+outputs/*.pdf
