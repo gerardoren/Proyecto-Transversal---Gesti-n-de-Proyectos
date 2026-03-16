@@ -1,7 +1,10 @@
+# Setup Rtools PATH - corregido con la ubicación correcta del compilador
+Sys.setenv(PATH = paste("C:\\rtools43\\x86_64-w64-mingw32.static.posix\\bin;C:\\rtools43\\usr\\bin", Sys.getenv("PATH"), sep=";"))
+
 library(rstan)
 
 rstan_options(auto_write = TRUE)
-options(mc.cores = 1)
+options(mc.cores = parallel::detectCores())
 
 model_path <- "code/Longitudinal_Conf.stan"
 

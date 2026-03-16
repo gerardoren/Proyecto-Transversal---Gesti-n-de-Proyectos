@@ -1,102 +1,71 @@
-# Code
+# Scripts de Análisis
 
-Esta carpeta contiene todo el codigo necesario para reproducir la Figura 4 del articulo de Deffner et al. (2024).
+Código para reproducir la Figura 4 del artículo de Deffner et al. (2024).
 
 ---
 
-## Archivos incluidos
+## Archivos
 
-| Archivo | Lineas | Descripcion |
+| Archivo | Líneas | Descripción |
 |---------|--------|-------------|
-| `longitudinal_transmission_analysis.R` | 722 | Script principal: simulacion ABM, inferencia bayesiana, contrafacticos y visualizacion |
-| `Longitudinal_Conf.stan` | 128 | Modelo bayesiano jerarquico EWA para inferir parametros de transmision cultural |
-| `test_compile.R` | 10 | Script de verificacion: compila el modelo Stan para confirmar que el entorno esta configurado |
+| `longitudinal_transmission_analysis.R` | 722 | Pipeline completo: simulación ABM, inferencia Bayesiana, contrafácticos |
+| `Longitudinal_Conf.stan` | 128 | Modelo Bayesiano EWA para inferencia de parámetros |
+| `test_compile.R` | 10 | Verificar compilación del modelo Stan |
+| `figure_4b.R` | 50 | Generar Figura 4B (distribuciones posteriores) |
 
 ---
 
-## Pipeline de analisis
-
-El script principal (`longitudinal_transmission_analysis.R`) ejecuta el siguiente flujo:
+## Pipeline del análisis
 
 ```
-[Carga de datos]
-      |
-      v
-[1. Simulacion ABM]  (lineas 1-291)
-      |  - 3,000 agentes, 30 grupos, cuadricula 50x50
-      |  - 1,000 pasos de burn-in demografico
-      |  - 100 pasos de skip + 30 pasos de registro
-      |  - Demografia, migracion y transmision cultural
-      |
-      v
-[2. Preparacion de datos para Stan]  (lineas 293-366)
-      |  - Reestructura datos de elecciones, innovaciones y migraciones
-      |  - Genera lista stan.data con todas las variables requeridas
-      |
-      v
-[3. Inferencia bayesiana]  (lineas 368-372)
-      |  - Ajuste del modelo Longitudinal_Conf.stan
-      |  - 4 cadenas MCMC, 3,000 iteraciones, adapt_delta=0.8
-      |
-      v
-[4. Simulaciones contrafacticas]  (lineas 374-598)
-      |  - 300 muestras del posterior (100 base, 100 +5%, 100 -5%)
-      |  - Simulacion ABM con parametros estimados
-      |
-      v
-[5. Visualizacion - Figura 4]  (lineas 600-722)
-         - Panel a: Serie temporal de participantes
-         - Panel b: Posteriores de mu y theta
-         - Panel c: Tasas de migracion por edad
-         - Panel d: Efecto causal contrafactico
+[Datos] → [ABM] → [Preparación] → [Inferencia Stan] → [Contrafácticos] → [Visualización]
+```
+
+### 1. **Simulación ABM** (longitudinal_transmission_analysis.R)
+- 3,000 agentes, 30 grupos
+- Migración, demografía y transmisión cultural
+- 1,000 pasos burn-in + 30 pasos registro
+
+### 2. **Inferencia Bayesiana** (Longitudinal_Conf.stan)
+- Modelo EWA para aprendizaje cultural
+- Parámetros: tasa innovación (μ), exponente conformidad (θ)
+- 4 cadenas MCMC, 3,000 iteraciones
+
+### 3. **Contrafácticos**
+- Simulaciones con tasas migración: -5%, original, +5%
+- Mide efecto en diversidad cultural (Fst)
+
+### 4. **Figura 4**
+- Panel a: Series temporales
+- Panel b: Posteriores μ y θ
+- Panel c: Migración por edad
+- Panel d: Análisis causal contrafáctico
+
+---
+
+## Ejecución rápida
+
+```r
+# Verificar Stan
+source("test_compile.R")
+
+# Generar Figura 4B
+source("figure_4b.R")
+
+# Pipeline completo (2-3 horas)
+source("longitudinal_transmission_analysis.R")
 ```
 
 ---
 
-## Detalle de cada archivo
+## Dependencias
 
-### `longitudinal_transmission_analysis.R`
+```r
+install.packages(c("rstan", "scales", "RColorBrewer"))
+```
 
-Script principal escrito por D. Deffner (deffner@mpib-berlin.mpg.de). Implementa el flujo completo de analisis.
+Para R 4.4.1, se requiere Rtools 4.3+ instalado en el sistema.
 
-**Funciones definidas:**
-
-| Funcion | Linea | Descripcion |
-|---------|-------|-------------|
-| `f_age(increasing, rate, x)` | 22 | Funcion exponencial para probabilidades dependientes de la edad (supervivencia, aprendizaje) |
-| `getFst(trait_vec)` | 31 | Calcula el indice de fijacion (Fst) a partir de vectores de rasgos culturales (basado en Mesoudi, 2018) |
-| `sim.funct(N_steps, Nsim, sample, m_in)` | 397 | Funcion de simulacion contrafactica que ejecuta el ABM con parametros del posterior |
-
-**Parametros del modelo (configuracion por defecto):**
-
-| Parametro | Valor | Descripcion |
-|-----------|-------|-------------|
-| `N` | 3,000 | Numero de agentes |
-| `N_groups` | 30 | Numero de grupos |
-| `N_steps` | 30 | Pasos temporales de registro |
-| `N_burn_in` | 1,000 | Pasos de burn-in demografico |
-| `N_skip` | 100 | Pasos antes de registrar datos |
-| `N_mod` | 30 | Modelos de rol por aprendiz |
-| `mu` | 0.1 | Tasa de innovacion |
-| `f` | 3 | Exponente de conformidad |
-| `size_grid` | 50 | Tamano de la cuadricula espacial |
-| `r_mort` | 0.001 | Tasa de decaimiento de mortalidad |
-| `r_learn` | 0 | Tasa de decaimiento de aprendizaje (0 = todos aprenden) |
-| `m_NL` | TRUE | Usar tasas reales de migracion de Paises Bajos |
-
-**Dependencias de R:**
-
-- `scales` -- Transparencia de colores
-- `RColorBrewer` -- Paletas de colores
-- `rethinking` -- Interfaz para Stan y utilidades bayesianas (funciones `stan()`, `extract.samples()`, `inv_logit()`, `HPDI()`)
-- `rstan` -- Backend de inferencia bayesiana
-
-**Datos de entrada:**
-
-- Datos de migracion desde Zenodo: `https://zenodo.org/records/18879419/files/beta_df.RDS?download=1`
-- Modelo Stan: `Longitudinal_Conf.stan` (debe estar en el mismo directorio)
-
----
 
 ### `Longitudinal_Conf.stan`
 
